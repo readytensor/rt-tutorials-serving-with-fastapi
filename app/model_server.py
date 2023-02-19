@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-import json
-from typing import List, Dict
 
 import data_management.pipeline as pipeline
 from model.classifier import Classifier
