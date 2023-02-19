@@ -1,4 +1,7 @@
-import numpy as np, pandas as pd
+import numpy as np
+import pandas as pd
+import json
+from typing import List, Dict
 
 import data_management.pipeline as pipeline
 from model.classifier import Classifier
@@ -12,23 +15,18 @@ class ModelServer:
 
     def __init__(self, model_path, data_schema):
         """
-        Initializes a new instance of the `ModelServer` class
+        Initializes a new instance of the `ModelServer` class.
         
         Args:
             model_path (str): The path to the directory containing the trained model artifacts.
             data_schema (BinaryClassificationSchema): An instance of the BinaryClassificationSchema class that defines the dataset schema.
-            preprocessor (sklearn.Pipeline): The preprocessing pipeline used for transforming input data.
-            label_encoder (sklearn.LabelEncoder): The label encoder used for encoding target variable.
-            model (Classifier): An instance of the Classifier class representing the trained classifier model.
-    
-
         """
 
         self.model_path = model_path
+        self.data_schema = data_schema
         self.preprocessor = None
         self.label_encoder = None
         self.model = None
-        self.data_schema = data_schema
 
     def _get_preprocessor_and_lbl_encoder(self):
         """
@@ -109,3 +107,35 @@ class ModelServer:
             self.predict_proba(data), columns=class_names
         ).idxmax(axis=1)
         return preds_df
+
+    def predict_for_online_inferences(self, data):
+        """
+        Make batch predictions on the input data and return a list of dictionaries containing predicted probabilities
+        in a JSON string format.
+
+        Args:
+            data (pandas.DataFrame): The input data to make predictions on.
+
+        Returns:
+            list(dict): A list of dictionaries containing the predicted probabilities for each input record.
+        """
+        preds_df = self.predict_proba(data)
+        class_names = pipeline.get_class_names(self.label_encoder)
+        preds_df["__label"] = pd.DataFrame(
+            preds_df[class_names], columns=class_names
+        ).idxmax(axis=1)
+        
+        predictions_response = []
+        for rec in preds_df.to_dict(orient="records"):
+            pred_obj = {
+                self.data_schema.id_field: rec[self.data_schema.id_field],
+                "label": str(rec["__label"]),
+                "probabilities": {
+                    str(k): np.round(v, 5)
+                    for k, v in rec.items()
+                    if k not in [self.data_schema.id_field, "__label"]
+                }
+            }
+            predictions_response.append(pred_obj)
+        
+        return predictions_response
