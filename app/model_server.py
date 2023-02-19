@@ -107,3 +107,35 @@ class ModelServer:
             self.predict_proba(data), columns=class_names
         ).idxmax(axis=1)
         return preds_df
+
+    def predict_for_online_inferences(self, data):
+        """
+        Make batch predictions on the input data and return a list of dictionaries containing predicted probabilities
+        in a JSON string format.
+
+        Args:
+            data (pandas.DataFrame): The input data to make predictions on.
+
+        Returns:
+            list(dict): A list of dictionaries containing the predicted probabilities for each input record.
+        """
+        preds_df = self.predict_proba(data)
+        class_names = pipeline.get_class_names(self.label_encoder)
+        preds_df["__label"] = pd.DataFrame(
+            preds_df[class_names], columns=class_names
+        ).idxmax(axis=1)
+        
+        predictions_response = []
+        for rec in preds_df.to_dict(orient="records"):
+            pred_obj = {
+                self.data_schema.id_field: rec[self.data_schema.id_field],
+                "label": str(rec["__label"]),
+                "probabilities": {
+                    str(k): np.round(v, 5)
+                    for k, v in rec.items()
+                    if k not in [self.data_schema.id_field, "__label"]
+                }
+            }
+            predictions_response.append(pred_obj)
+        
+        return predictions_response
