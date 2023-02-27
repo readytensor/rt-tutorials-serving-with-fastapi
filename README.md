@@ -39,6 +39,50 @@ See the following repository for more information on the **Classifier** class de
 - Run the script `train.py` to train the random forest classifier model. This will save the model artifacts, including the preprocessing pipeline and label encoder, in the path `./app/outputs/artifacts/`.
 - Run the script `test.py` to run test predictions using the trained model. This script will load the artifacts and create and save the predictions in a file called `predictions.csv` in the path `./app/outputs/predictions/`.
 - Run the script `serve.py` to start the inference service, which can be queried using the `/ping` and `/infer` endpoints.
+- Send a POST request to the endpoint `/infer` using curl. See sample curl command:
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+  "instances": [
+    {
+      "PassengerId": "879",
+      "Pclass": 3,
+      "Name": "Laleff, Mr. Kristo",
+      "Sex": "male",
+      "Age": null,
+      "SibSp": 0,
+      "Parch": 0,
+      "Ticket": "349217",
+      "Fare": 7.8958,
+      "Cabin": null,
+      "Embarked": "S"
+    }
+  ]
+}' http://localhost:8080/infer
+```
+
+The key `instances` contains a list of objects, each of which is a sample for which the prediction is requested. The server will respond with a JSON object containing the predicted probabilities for each input record:
+
+```json
+{
+  "status": "success",
+  "message": null,
+  "predictions": [
+    {
+      "id": "879",
+      "label": "0",
+      "probabilities": {
+        "0": 0.9975,
+        "1": 0.0025
+      }
+    }
+  ]
+}
+```
+
+## OpenAPI
+
+Since the service is implemented using FastAPI, we get automatic documentation of the APIs offered by the service. Visit the docs at `http://localhost:8080/docs`.
 
 ## Requirements
 
