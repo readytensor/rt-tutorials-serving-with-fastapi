@@ -1,10 +1,6 @@
 ## Introduction
 
-This repository demonstrates how to create an inference service for a Random Forest binary classifier model using FastAPI and uvicorn. The implementation uses object-oriented programming (OOP) for the main algorithm. The same class interface can be used to create other classifier models, such as neural networks.
-
-The purpose is to create generalized algorithm implementations that avoid hard-coding your logic to a specific dataset. This makes it easier to re-use your algorithms with new datasets in the future without requiring any code change.
-
-This repository is part of a tutorial series on Ready Tensor, a web platform for AI developers and users.
+This repository demonstrates how to create an inference service for a Random Forest binary classifier model using FastAPI and uvicorn. This repository is part of a tutorial series on Ready Tensor, a web platform for AI developers and users.
 
 ## Repository Contents
 
