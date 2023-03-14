@@ -6,16 +6,18 @@ import uvicorn
 
 from data_management.schema_provider import BinaryClassificationSchema
 from model_server import ModelServer
-from paths import MODEL_ARTIFACTS_PATH, SCHEMA_FPATH
+from paths import MODEL_ARTIFACTS_PATH, SCHEMA_DIR
+from data_management.data_utils import read_json_in_directory
 
 # Create an instance of the FastAPI class
 app = FastAPI()
 
 # Load the schema file
-schema = BinaryClassificationSchema(SCHEMA_FPATH)
+schema_dict = read_json_in_directory(SCHEMA_DIR)
+data_schema = BinaryClassificationSchema(schema_dict)
 
 # Load the model server
-model_server = ModelServer(model_path=MODEL_ARTIFACTS_PATH, data_schema=schema)
+model_server = ModelServer(model_path=MODEL_ARTIFACTS_PATH, data_schema=data_schema)
 
 
 @app.get("/ping")
