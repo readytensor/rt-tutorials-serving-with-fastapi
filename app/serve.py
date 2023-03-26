@@ -13,8 +13,8 @@ from data_management.data_utils import read_json_in_directory
 app = FastAPI()
 
 # Load the schema file
-schema_dict = read_json_in_directory(SCHEMA_DIR)
-data_schema = BinaryClassificationSchema(schema_dict)
+schema_dict = read_json_in_directory(file_dir_path=SCHEMA_DIR)
+data_schema = BinaryClassificationSchema(schema_dict=schema_dict)
 
 # Load the model server
 model_server = ModelServer(model_path=MODEL_ARTIFACTS_PATH, data_schema=data_schema)
