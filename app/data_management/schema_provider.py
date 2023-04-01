@@ -1,5 +1,6 @@
 from typing import List
-
+from data_model.schema_validator import SchemaModel
+from pydantic import ValidationError
 
 class BinaryClassificationSchema:
     """
@@ -15,6 +16,12 @@ class BinaryClassificationSchema:
         Args:
             schema_dict (dict): The python dictionary of schema.
         """
+        # Validate the schema
+        try:
+            self.schema = SchemaModel.parse_obj(schema_dict).dict()
+        except ValidationError as e:
+            raise ValueError(f'Invalid schema: {e}')
+        
         self.schema = schema_dict
         self._numeric_features = self._get_features_of_type("NUMERIC", "INT", "REAL")
         self._categorical_features = self._get_features_of_type("CATEGORICAL")

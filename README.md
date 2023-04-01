@@ -1,33 +1,28 @@
 ## Introduction
 
-This repository demonstrates how to create an inference service for a Random Forest binary classifier model using FastAPI and uvicorn. This repository is part of a tutorial series on Ready Tensor, a web platform for AI developers and users.
+This repository demonstrates how to create an inference service for a Random Forest binary classifier model using FastAPI and uvicorn.
+
+This repository is part of a tutorial series on Ready Tensor, a web platform for AI developers and users. It is referenced in the tutorial called **Serving an ML model using FastAPI**. The purpose of the tutorial series is to help AI developers create adaptable algorithm implementations that avoid hard-coding your logic to a specific dataset. This makes it easier to re-use your algorithms with new datasets in the future without requiring any code change.
 
 ## Repository Contents
 
 The `app/` folder in the repository contains the following key folders/sub-folders:
 
 - `data_management/` will all files related to handling and preprocessing data.
+- `data_model/` contains the data model definition for the schema and data files.
 - `inputs/` contains the input files related to the _titanic_ dataset.
 - `model/` is a folder to save model artifacts and other assets specific to the trained model. Within this folder:
   - `artifacts/` is location to save model artifacts (i.e. the saved model including the trained preprocessing pipeline)
-- `outputs/` is used to contain the predictions or other results files. When the `test.py` script is run, a predictions file called `predictions.csv` is saved in `outputs/testing_outputs/` sub-directory.
-
-See the following repository for information on the use of the data schema that is provided in the path `./app/inputs/data_config/`.
-
-- [https://github.com/readytensor/rt-tutorials-data-schema](https://github.com/readytensor/rt-tutorials-data-schema)
-
-See the following repository for more information on the data proprocessing logic defined in the path `./app/data_management/`.
-
-- [https://github.com/readytensor/rt-tutorials-data-preprocessing](https://github.com/readytensor/rt-tutorials-data-preprocessing)
-
-See the following repository for more information on the **Classifier** class defined in the script called `classifier.py` in the path `./app/algorithm/` and the **ModelServer** class defined in the script called `model_server.py` in the path `./app/`.
-
-- [https://github.com/readytensor/rt-tutorials-oop-ml](https://github.com/readytensor/rt-tutorials-oop-ml)
+- `outputs/` is used to contain the predictions or other results files. When the `test.py` script is run, a predictions file called `predictions.csv` is saved in `outputs/testing_outputs/` sub-directory. Logs and errors are saved in the `outputs/logs/` sub-directory.
+- The `logger.py` script is used to define the logger object that is used to log errors and other information. There is also a `log_error()` function that is used to log errors to a separate file for convenient access to criticial errors.
+- The `train.py` script is used to train the model and save the model artifacts. The model artifacts are saved in the path `./app/outputs/artifacts/`. Logs and errors generated during training are saved in the path `./app/outputs/logs/` in files called `train.log` and `train.error`, respectively.
+- The `test.py` script is used to run test predictions using the trained model. The script loads the model artifacts and creates and saves the predictions in a file called `predictions.csv` in the path `./app/outputs/testing_outputs/`. Logs and errors generated during testing are saved in the path `./app/outputs/logs/` in files called `test.log` and `test.error`, respectively.
+- The `serve.py` script is used to serve the model as a REST API using FastAPI and uvicorn. The script loads the model artifacts and creates the API endpoints. The app listens on a GET endpoint `/ping` and a POST endpoint `/infer`. Logs and errors generated during serving are saved in the path `./app/outputs/logs/` in files called `serve.log` and `serve.error`, respectively.
 
 ## Usage
 
 - Create your virtual environment and install dependencies listed in `requirements.txt`.
-- Place the following 3 input files in the path `./app/inputs/`:
+- Place the following 3 input files in the sub-directories in `./app/inputs/`:
   - Train data, which must be a CSV file, to be placed in `./app/inputs/data/training/`. File name can be any; extension must be ".csv".
   - Test data, which must be a CSV file, to be placed in `./app/inputs/data/testing/`. File name can be any; extension must be ".csv".
   - The schema file in JSON format , to be placed in `./app/inputs/data_config/`. The schema conforms to Ready Tensor specification for the **Binary Classification-Base** category. File name can be any; extension must be ".json".
@@ -84,11 +79,9 @@ Since the service is implemented using FastAPI, we get automatic documentation o
 The code requires Python 3 and the following libraries:
 
 ```makefile
-fastapi==0.70.0
-uvicorn==0.15.0
 pydantic==1.8.2
-pandas==1.5.5
-numpy==1.19.5
+pandas==1.5.2
+numpy==1.20.3
 scikit-learn==1.0
 feature-engine==1.1.1
 ```

@@ -28,3 +28,13 @@ LOGS_DIR = os.path.join(OUTPUT_DIR, "logs")
 TEST_OUTPUTS_DIR = os.path.join(OUTPUT_DIR, "testing_outputs")
 # Name of the file containing the predictions
 PREDICTIONS_FILE_NAME = "predictions.csv"
+
+# Log file paths 
+TRAIN_LOG_FILE_PATH = os.path.join(LOGS_DIR, "train.log")
+TEST_LOG_FILE_PATH = os.path.join(LOGS_DIR, "test.log")
+SERVE_LOG_FILE_PATH = os.path.join(LOGS_DIR, "serve.log")
+
+# Error file paths
+TRAIN_ERROR_FILE_PATH = os.path.join(LOGS_DIR, "train.error")
+TEST_ERROR_FILE_PATH = os.path.join(LOGS_DIR, "test.error")
+SERVE_ERROR_FILE_PATH = os.path.join(LOGS_DIR, "serve.error")
