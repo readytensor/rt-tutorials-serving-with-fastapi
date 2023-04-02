@@ -79,6 +79,8 @@ Since the service is implemented using FastAPI, we get automatic documentation o
 The code requires Python 3 and the following libraries:
 
 ```makefile
+fastapi==0.70.0
+uvicorn==0.15.0
 pydantic==1.8.2
 pandas==1.5.2
 numpy==1.20.3
