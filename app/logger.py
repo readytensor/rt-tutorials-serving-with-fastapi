@@ -39,7 +39,7 @@ def log_error(message: str, error: Exception, error_fpath: str) -> None:
         error (Exception): The exception instance.
         error_fpath (str, optional): The file path to write the error message to. Defaults to None.
     """
-    with open(error_fpath, 'a', encoding='utf-8') as f:
+    with open(error_fpath, 'w', encoding='utf-8') as f:
         err_msg = f"{message} Error: {str(error)}"
         f.write(err_msg)
         f.write('\n')
