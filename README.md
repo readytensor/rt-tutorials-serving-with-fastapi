@@ -85,7 +85,8 @@ pydantic==1.8.2
 pandas==1.5.2
 numpy==1.20.3
 scikit-learn==1.0
-feature-engine==1.1.1
+feature-engine==1.2.0
+imbalanced-learn==0.8.1
 ```
 
 These packages can be installed by running the following command:

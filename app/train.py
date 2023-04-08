@@ -2,6 +2,7 @@ import os
 import numpy as np
 import random
 from typing import Union 
+from imblearn.over_sampling import SMOTE
 
 from data_management.schema_provider import BinaryClassificationSchema
 from data_management.pipeline import get_preprocess_pipeline, save_preprocessor_and_lbl_encoder, get_label_encoder
@@ -51,22 +52,30 @@ def run_training():
 
         # validate the data
         logger.info("Validating train data...")
-        train_data = validate_data(data=train_data, data_schema=data_schema, is_train=True)
+        train_data = validate_data(data=train_data, data_schema=data_schema, is_train=True)        
 
-        # fit preprocessing pipeline and transform data, fit label_encoder and transform labels
-        logger.info("Preprocessing data...")
+        # create preprocessing pipeline and label encoder
+        logger.info("Creating preprocessor and label encoder...")
         preprocess_pipeline = get_preprocess_pipeline(data_schema)
-        transformed_data = preprocess_pipeline.fit_transform(train_data[data_schema.features])     
         label_encoder = get_label_encoder(data_schema)
+
+        # fit preprocessing pipeline and transform data, fit label_encoder and transform labels        
+        logger.info("Preprocessing data...")
+        transformed_data = preprocess_pipeline.fit_transform(train_data.drop(data_schema.id_field, axis=1))
         transformed_labels = label_encoder.fit_transform(train_data[[data_schema.target_field]])
+
+        # handle class imbalance using SMOTE       
+        logger.info("Handling class imbalance ...")
+        smote = SMOTE()
+        balanced_data, balanced_labels = smote.fit_resample(transformed_data, transformed_labels)
 
         # instantiate and train classifier model 
         logger.info("Training model...")
         classifier = Classifier()
-        feature_cols = [c for c in transformed_data.columns if c not in [data_schema.id_field, data_schema.target_field]]
+        feature_cols = [c for c in balanced_data.columns if c not in [data_schema.id_field, data_schema.target_field]]
         classifier.fit(
-            train_X=transformed_data[feature_cols], 
-            train_y=transformed_labels
+            train_X=balanced_data[feature_cols], 
+            train_y=balanced_labels
         )
 
         # save preprocessor
