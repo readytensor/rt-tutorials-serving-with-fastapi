@@ -9,14 +9,14 @@ This repository is part of a tutorial series on Ready Tensor, a web platform for
 ```bash
 binary_class_project/
 ├── examples/
+│   ├── titanic_schema.json
+│   ├── titanic_train.csv
+│   └── titanic_test.csv
 ├── inputs/
 │   ├── data/
 │   │   ├── testing/
-│   │   │   └── titanic_test.csv
 │   │   └── training/
-│   │       └── titanic_train.csv
 │   └── schema/
-│       └─ titanic_schema.json│
 ├── model/
 │   └── artifacts/
 ├── outputs/
