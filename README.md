@@ -46,6 +46,7 @@ binary_class_project/
 │   │   └── data_schema.py
 │   ├── xai/
 │   ├── predict.py
+│   ├── serve.py
 │   ├── train.py
 │   └── utils.py
 ├── tests/
