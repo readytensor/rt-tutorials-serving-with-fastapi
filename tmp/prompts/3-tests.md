@@ -210,3 +210,9 @@ I have the following questions:
 1. Is such an integration test a good idea?
 2. If yes, should I add this test in the same script as the other unit tests? If i create a separate script, it would mess up the directory structure of the project since tests is supposed to mirror the src directory.
 3. Where would I place the test artifacts (i.e. the predictor model, preprocessing pipeline, etc.). We will likely use these for other tests as well.
+
+#############################################
+
+Ok, I have created a folder called `test_resources` which now contains the 5 files expected by the ModelResources class in its constructor. Can you now help me write an integration test for the `/infer` endpoint of my service?
+
+Note the test_script.py (in which we are writing tests) is directly in the root of `tests`.
