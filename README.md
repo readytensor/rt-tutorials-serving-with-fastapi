@@ -29,7 +29,7 @@ binary_class_project/
 │   │   ├── hpt.json
 │   │   ├── model_config.json
 │   │   ├── paths.py
-│   │   └── preprocessing.py
+│   │   └── preprocessing.json
 │   ├── data_model/
 │   ├── hyperparameter_tuning/
 │   │   ├── __init__.json
@@ -113,8 +113,8 @@ The key `instances` contains a list of objects, each of which is a sample for wh
 {
   "status": "success",
   "message": "",
-  "timestamp": "...varies...",
-  "requestId": "...varies...",
+  "timestamp": "<timestamp>",
+  "requestId": "<uniquely generated id>",
   "targetClasses": ["0", "1"],
   "targetDescription": "A binary variable indicating whether or not the passenger survived (0 = No, 1 = Yes).",
   "predictions": [
