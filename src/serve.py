@@ -17,6 +17,9 @@ from  predict import get_model_predictions, add_ids_to_predictions
 from utils import read_json_as_dict
 
 
+# Create an instance of the FastAPI class
+app = FastAPI()
+
 class ModelResources:
     def __init__(
             self,
@@ -24,7 +27,7 @@ class ModelResources:
             predictor_file_path: str = paths.PREDICTOR_FILE_PATH,
             pipeline_file_path: str = paths.PIPELINE_FILE_PATH,
             target_encoder_file_path: str = paths.TARGET_ENCODER_FILE_PATH,
-            model_config_file_path: str = paths.MODEL_CONFIG_FILE_PATH,    
+            model_config_file_path: str = paths.MODEL_CONFIG_FILE_PATH,
         ):
         self.data_schema = load_saved_schema(saved_schema_path)
         self.predictor_model = load_predictor_model(predictor_file_path)
@@ -35,11 +38,8 @@ class ModelResources:
         self.model_config = read_json_as_dict(model_config_file_path)
 
 
-# Create an instance of the FastAPI class
-app = FastAPI()
-
 def get_model_resources():
-    """Returns an instance of DataModel."""
+    """Returns an instance of ModelResources."""
     return ModelResources()
 
 
@@ -90,10 +90,10 @@ def create_predictions_response(
     Args:
         transformed_data (pd.DataFrame): The transfomed input data for prediction.
         data_schema (Any): An instance of the BinaryClassificationSchema.
-    
+
     Returns:
         dict: The response data in a dictionary.
-    """    
+    """
     class_names = data_schema.allowed_target_values
     # find predicted class which has the highest probability
     predictions_df["__predicted_class"] = predictions_df[class_names].idxmax(axis=1)
@@ -109,8 +109,7 @@ def create_predictions_response(
         "targetClasses": class_names,
         "targetDescription": data_schema.target_description,
         "predictions": sample_predictions,
-    }
-    
+    }    
     return predictions_response
 
 
@@ -164,7 +163,7 @@ async def infer(request: InferenceRequestBodyModel,
 
     Args:
         request (InferenceRequestBodyModel): The request body containing the input data.
-        model (DataModel, optional): The data model instance. Defaults to Depends(get_model).
+        model (ModelResources, optional): The model resources instance. Defaults to Depends(get_model).
 
     Raises:
         HTTPException: If there is an error during inference.
