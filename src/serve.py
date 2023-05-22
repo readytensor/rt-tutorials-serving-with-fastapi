@@ -94,7 +94,7 @@ def create_predictions_response(
     Returns:
         dict: The response data in a dictionary.
     """
-    class_names = data_schema.allowed_target_values
+    class_names = data_schema.target_classes
     # find predicted class which has the highest probability
     predictions_df["__predicted_class"] = predictions_df[class_names].idxmax(axis=1)
     sample_predictions = [
@@ -143,7 +143,7 @@ async def transform_req_data_and_make_predictions(
     predictions_df = get_model_predictions(
         transformed_data,
         model_resources.predictor_model,
-        model_resources.data_schema.allowed_target_values,
+        model_resources.data_schema.target_classes,
         model_resources.model_config["prediction_field_name"],
         return_probs=True)
     predictions_df_with_ids = add_ids_to_predictions(
