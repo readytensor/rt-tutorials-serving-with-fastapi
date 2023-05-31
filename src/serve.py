@@ -53,7 +53,7 @@ def create_app(model_resources):
     return app
 
 
-def create_and_run_app(model_resources:ModelResources=get_model_resources()):
+def create_and_run_app(model_resources:ModelResources):
     """Create and run Fastapi app for inference service
 
     Args:
@@ -66,4 +66,4 @@ def create_and_run_app(model_resources:ModelResources=get_model_resources()):
 
 
 if __name__ == "__main__":
-    create_and_run_app()
+    create_and_run_app(model_resources=get_model_resources())

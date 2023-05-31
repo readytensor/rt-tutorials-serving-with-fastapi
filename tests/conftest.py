@@ -2,10 +2,12 @@ import pytest
 import pandas as pd
 import numpy as np
 import json
+import os
 import random
 import string
 
-from src.schema.data_schema import BinaryClassificationSchema
+from schema.data_schema import BinaryClassificationSchema
+from serve_utils import get_model_resources
 
 
 @pytest.fixture
@@ -71,7 +73,7 @@ def model_config():
     """ Fixture to create a sample model_config json"""
     config = {
         "seed_value": 0,
-        "validation_split": 0.1,        
+        "validation_split": 0.1,
         "prediction_field_name": "prediction"
     }
     return config
@@ -248,6 +250,8 @@ def hpt_specs_file_path(hpt_specs, tmpdir):
     return str(config_file_path)
 
 
+
+
 @pytest.fixture
 def predictions_df():
     """Fixture for creating a DataFrame representing predictions."""
@@ -265,3 +269,23 @@ def predictions_df():
         'B': probabilities_B,
     })
     return df
+
+
+@pytest.fixture
+def resources_paths():
+    """Define a fixture for the paths to the test model resources."""
+    tests_dir = os.path.dirname(os.path.abspath(__file__))
+    test_resources_path = os.path.join(tests_dir, "test_resources")
+    return {
+        'saved_schema_path': os.path.join(test_resources_path, 'schema.joblib'),
+        'predictor_file_path': os.path.join(test_resources_path, 'predictor.joblib'),
+        'pipeline_file_path': os.path.join(test_resources_path, 'pipeline.joblib'),
+        'target_encoder_file_path': os.path.join(test_resources_path, 'target_encoder.joblib'),
+        'model_config_file_path': os.path.join(test_resources_path, 'model_config.json'),
+    }
+
+
+@pytest.fixture
+def model_resources(resources_paths):
+    """Define a fixture for the test ModelResources object."""
+    return get_model_resources(**resources_paths)
